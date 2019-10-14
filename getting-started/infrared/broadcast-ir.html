@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Infrared - Broadcast</title>
+    <script src="../../client-library/index.js"></script>
+</head>
+<body>
+<script>
+  /*
+  This program sets up RVR to communicate with another robot, e.g. BOLT, capable of infrared communication.
+   */
+  async function main() {
+    let rvrToy = new SpheroRvr.SpheroRvrToy('0.0.0.0', 2010);
+    rvrToy.wake();
+    // Give RVR time to wake up
+    await sleep(1000);
+
+    rvrToy.startRobotToRobotInfraredBroadcasting(1, 0);
+
+    for(let i=0; i<2; i++){
+      rvrToy.rawMotors(SpheroRvr.DriveRawMotorModesEnum.forward, 64, SpheroRvr.DriveRawMotorModesEnum.forward, 64);
+      await sleep(2000);
+    }
+
+    rvrToy.stopRobotToRobotInfraredBroadcasting();
+  }
+
+  // This function is used to sleep between calls in order to give RVR commands time to complete
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  main();
+
+</script>
+
+</body>
+</html>

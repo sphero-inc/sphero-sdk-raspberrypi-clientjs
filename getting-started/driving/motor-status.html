@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drive - Motor Status</title>
+</head>
+<body>
+<script>
+  /*
+   This program demonstrates how to retrieve information about RvR's motor status.
+  */
+  async function main() {
+    let rvrToy = new SpheroRvr.SpheroRvrToy('0.0.0.0', 2010);
+    rvrToy.wake();
+    // Give RVR time to wake up
+    await sleep(1000);
+
+    // Get current motor fault status
+    let motorFaultStatus = await rvrToy.getMotorFaultState();
+    console.log('Current motor fault status:', motorFaultStatus);
+
+    // Subscribe to notifications for the event that RvR's motor status changes
+    let isEnabled = true;
+    rvrToy.enableMotorFaultNotify(isEnabled);
+    rvrToy.enableMotorStallNotify(isEnabled);
+
+    rvrToy.onMotorFaultNotify((faultStatus) => {
+        console.log('Fault status changed to:', faultStatus);
+    });
+
+    rvrToy.onMotorStallNotify((data) => {
+      let notificationInfo = data.isTriggered ? 'Protection triggered' : 'Protection untriggered (resumed normal operation).'
+      console.log(notificationInfo, 'Motor affected:', data.motorIndex);
+    });
+  }
+
+  // This function is used to sleep between calls in order to give RVR commands time to complete
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  main();
+
+</script>
+</body>
+</html>

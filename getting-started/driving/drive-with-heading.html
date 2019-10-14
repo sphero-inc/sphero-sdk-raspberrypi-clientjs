@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drive - Drive with Heading</title>
+    <script src="../../client-library/index.js"></script>
+</head>
+<body>
+<script>
+  /*
+   This program has RVR drive around in different directions using the function drive_with_heading.
+  */
+
+  async function main() {
+    let rvrToy = new SpheroRvr.SpheroRvrToy('0.0.0.0', 2010);
+    rvrToy.wake();
+    // Give RVR time to wake up
+    await sleep(1000);
+
+    rvrToy.resetYaw();
+
+    rvrToy.driveWithHeading(128, 0, SpheroRvr.DriveDriveFlagsBitmask.none);
+    await sleep(1000);
+
+    rvrToy.driveWithHeading(128, 0, SpheroRvr.DriveDriveFlagsBitmask.reverse);
+    await sleep(1000);
+
+    rvrToy.driveWithHeading(128, 90, SpheroRvr.DriveDriveFlagsBitmask.none);
+    await sleep(1000);
+
+    rvrToy.driveWithHeading(128, 270, SpheroRvr.DriveDriveFlagsBitmask.none);
+    await sleep(1000);
+
+    rvrToy.driveWithHeading(0, 0, SpheroRvr.DriveDriveFlagsBitmask.none);
+    await sleep(1000);
+  }
+
+  // This function is used to sleep between calls in order to give RVR commands time to complete
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  main();
+
+</script>
+
+</body>
+</html>

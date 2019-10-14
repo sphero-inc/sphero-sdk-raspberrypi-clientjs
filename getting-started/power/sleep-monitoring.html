@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Power - Sleep Monitoring</title>
+    <script src="../../client-library/index.js"></script>
+</head>
+<body>
+<script>
+  /*
+  This program demonstrates how to register handlers for a) the event received 10 seconds
+  before RVR will sleep unless some new command is issued and b) the event received when RVR does go to sleep.
+  Note that these notifications are received without the need to enable them on the robot.
+   */
+  async function main() {
+    let rvrToy = new SpheroRvr.SpheroRvrToy('0.0.0.0', 2010);
+    rvrToy.wake();
+    // Give RVR time to wake up
+    await sleep(1000);
+
+    rvrToy.onDidSleepNotify(() => {
+      console.log('RVR went to sleep!');
+    });
+
+    rvrToy.onWillSleepNotify(() => {
+      console.log('RVR is about to go sleep!');
+    });
+
+    console.log('Waiting for RVR to fall asleep...');
+  }
+
+  // This function is used to sleep between calls in order to give RVR commands time to complete
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  main();
+
+
+
+</script>
+</body>
+</html>

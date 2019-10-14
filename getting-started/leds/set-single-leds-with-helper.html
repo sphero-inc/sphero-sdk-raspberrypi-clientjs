@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LEDs - Set Single LEDs with Helper</title>
+    <script src="../../client-library/index.js"></script>
+</head>
+<body>
+<script>
+  /*
+  This program demonstrates how to set a single LED.
+   */
+  async function main() {
+    let rvrToy = new SpheroRvr.SpheroRvrToy('0.0.0.0', 2010);
+    rvrToy.wake();
+    // Give RVR time to wake up
+    await sleep(1000);
+
+    let ledControl = rvrToy.getLedControl();
+
+    let availableLedGroups = await ledControl.getAvailableLedGroups();
+    console.log('Available Led Groups:', availableLedGroups);
+
+    let availableColors = await ledControl.getAvailableLedGroups();
+    console.log('Available colors:', availableColors);
+
+    ledControl.turnLedsOff();
+    await sleep(1000);
+
+    ledControl.setLedRgb(ledControl.headlightLeft, 0, 255, 0);
+    await sleep(1000);
+
+    ledControl.setLedColor(ledControl.headlightRight, ledControl.red);
+    await sleep(1000);
+  }
+
+  // This function is used to sleep between calls in order to give RVR commands time to complete
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  main();
+
+</script>
+
+</body>
+</html>

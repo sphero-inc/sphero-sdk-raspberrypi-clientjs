@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sensor - Multi Sensor Stream</title>
+    <script src="../../client-library/index.js"></script>
+</head>
+<body>
+<script>
+  /*
+  This program demonstrates how to enable multiple sensors to stream.
+   */
+  async function main() {
+    let rvrToy = new SpheroRvr.SpheroRvrToy('0.0.0.0', 2010);
+    rvrToy.wake();
+    // Give RVR time to wake up
+    await sleep(1000);
+
+    let sensorControl = rvrToy.getSensorControl();
+
+    sensorControl.enableSensor(sensorControl.quaternion, (data) => {
+      console.log('Quaternion data:', data);
+    });
+    sensorControl.enableSensor(sensorControl.attitude, (data) => {
+      console.log('IMU data:', data);
+    });
+    sensorControl.enableSensor(sensorControl.gyroscope, (data) => {
+      console.log('Gyroscope data:', data);
+    });
+    console.log('Starting sensor streaming...');
+
+    sensorControl.startSensorStreaming(500);
+    await sleep(3000);
+
+    console.log('Pausing sensor streaming...');
+    sensorControl.pauseSensorStreaming();
+    await sleep(2000);
+
+    console.log('Starting sensor streaming...');
+    sensorControl.startSensorStreaming(500);
+    await sleep(3000);
+
+    console.log('Clearing sensor streaming...');
+    sensorControl.clearSensorStreaming();
+  }
+
+  // This function is used to sleep between calls in order to give RVR commands time to complete
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  main();
+
+</script>
+</body>
+</html>

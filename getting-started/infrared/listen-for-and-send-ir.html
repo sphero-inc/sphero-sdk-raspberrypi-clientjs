@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Infrared - Listen For and Send Infrared Messages</title>
+    <script src="../../client-library/index.js"></script>
+</head>
+<body>
+<script>
+  /*
+  This program sets up RVR to communicate with another robot, e.g. BOLT, capable of infrared communication.
+   */
+  async function main() {
+    let rvrToy = new SpheroRvr.SpheroRvrToy('0.0.0.0', 2010);
+    rvrToy.wake();
+    // Give RVR time to wake up
+    await sleep(1000);
+
+    rvrToy.onRobotToRobotInfraredMessageReceivedNotify((message) => {
+      console.log('IR message received:', message);
+    });
+    let isEnabled = true;
+    rvrToy.enableRobotInfraredMessageNotify(isEnabled);
+
+    let infraredCode = 3;
+    let strength = 64;
+    rvrToy.sendInfraredMessage(infraredCode, strength, strength, strength, strength);
+    console.log('Infrared message sent with codes:', infraredCode);
+  }
+
+  // This function is used to sleep between calls in order to give RVR commands time to complete
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  main();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sensor - Thermal Protection Status</title>
+</head>
+<body>
+<script>
+  /*
+   This program demonstrates how to retrieve information about RvR's motor thermal protection status.
+  */
+  async function main() {
+    let rvrToy = new SpheroRvr.SpheroRvrToy('0.0.0.0', 2010);
+    rvrToy.wake();
+    // Give RVR time to wake up
+    await sleep(1000);
+
+    // Get current motor fault status
+    let statusDetails = await rvrToy.getMotorThermalProtectionStatus();
+    console.log('Left motor temperature:', statusDetails.leftMotorTemperature, 'Left motor status:', statusDetails.leftMotorStatus);
+    console.log('Right motor temperature:', statusDetails.rightMotorTemperature, 'Right motor status:', statusDetails.rightMotorStatus);
+
+    // Subscribe to notifications for the event RvR's thermal protection status changes
+    let isEnabled = true;
+    rvrToy.enableMotorThermalProtectionStatusNotify(isEnabled);
+
+    rvrToy.onMotorThermalProtectionStatusNotify((statusDetails) => {
+      console.log('Left motor temperature:', statusDetails.leftMotorTemperature, 'Left motor status:', statusDetails.leftMotorStatus);
+      console.log('Right motor temperature:', statusDetails.rightMotorTemperature, 'Right motor status:', statusDetails.rightMotorStatus);
+    });
+  }
+
+  // This function is used to sleep between calls in order to give RVR commands time to complete
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  main();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LEDs - Set All LEDs with Helper</title>
+    <script src="../../client-library/index.js"></script>
+</head>
+<body>
+<script>
+  /*
+  This program demonstrates how to set the all the LEDs.
+   */
+  async function main() {
+    let rvrToy = new SpheroRvr.SpheroRvrToy('0.0.0.0', 2010);
+    rvrToy.wake();
+    // Give RVR time to wake up
+    await sleep(1000);
+
+    let ledControl = rvrToy.getLedControl();
+
+    ledControl.turnLedsOff();
+    await sleep(1000);
+
+    ledControl.setAllLedsRgb(0, 255, 0);
+    await sleep(1000);
+
+    ledControl.setAllLedsColor(ledControl.red);
+    await sleep(1000);
+  }
+
+  // This function is used to sleep between calls in order to give RVR commands time to complete
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  main();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LEDs - Set Single LEDs</title>
+    <script src="../../client-library/index.js"></script>
+</head>
+<body>
+<script>
+  /*
+  This program demonstrates how to set a single LED.
+   */
+  async function main() {
+    let rvrToy = new SpheroRvr.SpheroRvrToy('0.0.0.0', 2010);
+    rvrToy.wake();
+    // Give RVR time to wake up
+    await sleep(1000);
+
+    // Turn all LEDs off
+    let offRgb = [0, 0, 0];
+
+    let ledBrightnessValues = [];
+    for (let i = 0; i < 10; i++) {
+      for (let colorValue of offRgb)
+        ledBrightnessValues.push(colorValue);
+    }
+
+    rvrToy.setAllLeds(SpheroRvr.RvrLedGroups.allLights, ledBrightnessValues);
+    await sleep(1000);
+
+    // Set headlight LEDs to blue
+    let blueRgb = [0, 0, 255];
+
+    rvrToy.setAllLeds(SpheroRvr.RvrLedGroups.leftHeadlight, blueRgb);
+    await sleep(1000);
+
+    rvrToy.setAllLeds(SpheroRvr.RvrLedGroups.rightHeadlight, blueRgb);
+  }
+
+  // This function is used to sleep between calls in order to give RVR commands time to complete
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  main();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Power - Get Battery Notification</title>
+    <script src="../../client-library/index.js"></script>
+</head>
+<body>
+<script>
+  /*
+  This program demonstrates how to retrieve the battery state of RVR.
+   */
+
+  async function main() {
+    let rvrToy = new SpheroRvr.SpheroRvrToy('0.0.0.0', 2010);
+    rvrToy.wake();
+    // Give RVR time to wake up
+    await sleep(1000);
+
+    rvrToy.onBatteryVoltageStateChangeNotify((battery_voltage_state) => {
+      console.log('Battery voltage state:', battery_voltage_state);
+    });
+
+    let isEnabled = true;
+    rvrToy.enableBatteryVoltageStateChangeNotify(isEnabled);
+
+    console.log('Waiting for battery notification...');
+  }
+
+  // This function is used to sleep between calls in order to give RVR commands time to complete
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  main();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sensor - Change Stream Settings</title>
+    <script src="../../client-library/index.js"></script>
+</head>
+<body>
+<script>
+  /*
+  This program demonstrates how to update sensor streaming parameters.
+   */
+  async function main() {
+    let rvrToy = new SpheroRvr.SpheroRvrToy('0.0.0.0', 2010);
+    rvrToy.wake();
+    // Give RVR time to wake up
+    await sleep(1000);
+
+    let sensorControl = rvrToy.getSensorControl();
+
+    console.log('Enabling IMU at 100 ms...');
+    sensorControl.enableSensor(sensorControl.attitude, (data) => {
+      console.log('IMU data response: ', data);
+    });
+    sensorControl.startSensorStreaming(100);
+    await sleep(3000);
+
+    console.log('Updating interval to 1000ms...');
+    sensorControl.pauseSensorStreaming();
+    sensorControl.startSensorStreaming(1000);
+    await sleep(3000);
+
+    console.log('Adding ambient light and velocity sensor streams...');
+    sensorControl.pauseSensorStreaming();
+
+    sensorControl.enableSensor(sensorControl.ambientLight, (data) => {
+      console.log('Ambient light data response:', data);
+    });
+    sensorControl.enableSensor(sensorControl.velocity, (data) => {
+      console.log('Velocity data response:', data);
+    });
+    sensorControl.startSensorStreaming(1000);
+    await sleep(3000);
+
+    console.log('Disabling IMU sensor stream and updating interval to 100 ms...');
+    sensorControl.pauseSensorStreaming();
+    sensorControl.disableSensor(sensorControl.attitude);
+    sensorControl.startSensorStreaming(100);
+    await sleep(3000);
+
+    console.log('Clearing all services...');
+    sensorControl.clearSensorStreaming();
+  }
+
+  // This function is used to sleep between calls in order to give RVR commands time to complete
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  main();
+
+</script>
+</body>
+</html>
